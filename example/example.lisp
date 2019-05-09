@@ -11,26 +11,33 @@
 (gamekit:defgame postproc-example (gamekit.postproc:postproc
                                    gamekit.postproc.blur:blur-postproc)
   ()
-  (:viewport-width 800)
-  (:viewport-height 600)
+  (:viewport-width 480)
+  (:viewport-height 640)
+  (:canvas-width 240)
+  (:canvas-height 320)
   (:viewport-title "Post-processed example")
   (:default-initargs :postproc-pipelines '(gamekit.postproc.blur:blur-pipeline)
-                     :postproc-indirect-width 200
-                     :postproc-indirect-height 150))
+                     :postproc-indirect-width 240
+                     :postproc-indirect-height 320))
 
 
 (defmethod gamekit.postproc.blur:blur-passes ((this postproc-example))
-  10)
+  0)
+
+(gamekit:define-image :ship
+    (asdf:system-relative-pathname :trivial-gamekit-postproc/example "./example/forthebenefitormrkite.png"))
 
 (defmethod gamekit:draw ((this postproc-example))
-  (let* ((current-time (bodge-util:real-time-seconds))
-         (x (+ (* (cos current-time) 100) (/ (gamekit:viewport-width) 2)))
-         (y (+ (* (sin current-time) 100) (/ (gamekit:viewport-height) 2))))
+  (bodge-canvas:antialias-shapes nil)
+  (let* ((current-time (/ (bodge-util:real-time-seconds) 2))
+         (x (+ (* (cos current-time) 50) 80))
+         (y 20 #++ (+ (* (sin current-time) 100) 100)))
+    (bodge-canvas:antialias-shapes nil)
     (gamekit:draw-rect +origin+
-                       (gamekit:viewport-width) (gamekit:viewport-height)
+                       240 320
                        :fill-paint *background*)
-    (gamekit:draw-circle (gamekit:vec2 x y) 50 :fill-paint *foreground*)))
+    (gamekit:draw-image (gamekit:vec2 (floor x) (floor y)) :ship)))
 
 
 (defun run ()
-  (gamekit:start 'postproc-example))
+  (gamekit:start 'postproc-example :swap-interval 0))
