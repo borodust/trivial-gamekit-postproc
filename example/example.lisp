@@ -16,11 +16,17 @@
   (:viewport-title "Post-processed example")
   (:default-initargs :postproc-pipelines '(gamekit.postproc.blur:blur-pipeline)
                      :postproc-indirect-width 200
-                     :postproc-indirect-height 150))
+                     :postproc-indirect-height 150
+                     :postproc-indirect-filter :linear))
 
 
 (defmethod gamekit.postproc.blur:blur-passes ((this postproc-example))
   10)
+
+
+(defmethod gamekit.postproc.blur:blur-offset-coefficient ((this postproc-example))
+  (- 2 (* (abs (cos (* (bodge-util:real-time-seconds) 0.5))) 2)))
+
 
 (defmethod gamekit:draw ((this postproc-example))
   (let* ((current-time (bodge-util:real-time-seconds))

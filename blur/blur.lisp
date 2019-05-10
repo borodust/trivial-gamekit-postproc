@@ -3,7 +3,8 @@
   (:use :cl :gamekit.postproc)
   (:export #:blur-postproc
            #:blur-pipeline
-           #:blur-passes))
+           #:blur-passes
+           #:blur-offset-coefficient))
 (cl:in-package :trivial-gamekit.postproc.blur)
 
 
@@ -19,7 +20,8 @@
   (canvas-texture :name "image")
   (canvas-width :name "width")
   (canvas-height :name "height")
-  (vertical :name "isVertical" :type :bool))
+  (vertical :name "isVertical" :type :bool)
+  (offset-coefficient :name "offsetCoef"))
 
 
 (ge.gx:defpipeline blur-pipeline
@@ -36,8 +38,16 @@
     1))
 
 
+(defgeneric blur-offset-coefficient (blur-postproc)
+  (:method ((this blur-postproc))
+    (declare (ignore this))
+    1f0))
+
+
 (defmethod handle-pipeline-rendering ((this blur-postproc)
                                       (pipeline-class (eql 'blur-pipeline)))
   (loop repeat (blur-passes this)
-        do (render-pipeline 'vertical t)
-           (render-pipeline 'vertical nil)))
+        do (render-pipeline 'vertical t
+                            'offset-coefficient (float (blur-offset-coefficient this) 0f0))
+           (render-pipeline 'vertical nil
+                            'offset-coefficient (float (blur-offset-coefficient this) 0f0))))
