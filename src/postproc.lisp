@@ -57,11 +57,12 @@
 
 (define-event-handler on-framebuffer-change
     ((event ge.host:framebuffer-size-change-event) width height)
-  (with-slots (framebuffer-size (this-width width) (this-height height)) (ge.app:app)
-    (setf (x framebuffer-size) width
-          (y framebuffer-size) height)
-    (update-indirect-canvas :width (or this-width width)
-                            :height (or this-height height))))
+  (when (subtypep (class-of (ge.app:app)) 'postproc)
+    (with-slots (framebuffer-size (this-width width) (this-height height)) (ge.app:app)
+      (setf (x framebuffer-size) width
+            (y framebuffer-size) height)
+      (update-indirect-canvas :width (or this-width width)
+                              :height (or this-height height)))))
 
 
 (defmethod ge.app:handle-drawing ((this postproc) canvas ui)

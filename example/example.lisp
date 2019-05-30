@@ -1,8 +1,8 @@
 (cl:defpackage :trivial-gamekit.postproc.example
   (:use :cl)
   (:export #:run))
-(cl:in-package :trivial-gamekit.postproc.example)
 
+(cl:in-package :trivial-gamekit.postproc.example)
 
 (defparameter *background* (gamekit:vec4 0.2 0.2 0.2 1))
 (defparameter *foreground* (gamekit:vec4 0.8 0.8 0.8 1))
@@ -13,7 +13,7 @@
   ()
   (:viewport-width 800)
   (:viewport-height 600)
-  (:viewport-title "Post-processed example")
+  (:viewport-title "Post Processing Example")
   (:default-initargs :postproc-pipelines '(gamekit.postproc.blur:blur-pipeline)
                      :postproc-indirect-width 200
                      :postproc-indirect-height 150
@@ -37,6 +37,7 @@
                        :fill-paint *background*)
     (gamekit:draw-circle (gamekit:vec2 x y) 50 :fill-paint *foreground*)))
 
+(cl:in-package :trivial-gamekit.postproc.example)
 
 (defun run ()
   (gamekit:start 'postproc-example))
