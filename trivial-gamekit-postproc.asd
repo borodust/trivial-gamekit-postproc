@@ -8,8 +8,20 @@
   :pathname "src/"
   :components ((:file "packages")
                (:file "banner")
+               (:file "chain")
                (:file "pipeline")
                (:file "postproc")))
+
+
+(asdf:defsystem :trivial-gamekit-postproc/example
+  :description "Post-processing for trivial-gamekit"
+  :author "Pavel Korolev"
+  :mailto "dev@borodust.org"
+  :license "MIT"
+  :depends-on (:trivial-gamekit-postproc)
+  :serial t
+  :pathname "example/"
+  :components ((:file "example")))
 
 
 (asdf:defsystem :trivial-gamekit-postproc/blur
@@ -23,12 +35,12 @@
   :components ((:file "blur")))
 
 
-(asdf:defsystem :trivial-gamekit-postproc/example
-  :description "Post-processing for trivial-gamekit"
+(asdf:defsystem :trivial-gamekit-postproc/blur-example
+  :description "Gaussian blur trivial-gamekit-postproc"
   :author "Pavel Korolev"
   :mailto "dev@borodust.org"
   :license "MIT"
-  :depends-on (:trivial-gamekit-postproc :trivial-gamekit-postproc/blur)
+  :depends-on (:trivial-gamekit-postproc/blur)
   :serial t
-  :pathname "example/"
+  :pathname "blur/"
   :components ((:file "example")))

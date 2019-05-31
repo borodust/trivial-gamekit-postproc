@@ -22,6 +22,31 @@ Also lets define a package we will evaluate our code in.
 #+END_SRC
 
 ** The Code
+#+BEGIN_SRC glsl :tangle example.glsl
+  #version 330 core
+  #pragma bodge: import gamekit/postproc
+
+  //
+  // Adapted from:
+  // https://www.shadertoy.com/view/4sf3W8
+  //
+
+  void mainPostproc(out vec4 fragColor, in sampler2D image, in vec2 viewportSize) {
+    vec3 c[9];
+    for (int i = 0; i < 3; ++i) {
+      for (int j = 0; j < 3; ++j) {
+        c[3*i+j] = texture(image,
+                           (gl_FragCoord.xy + vec2(i-1,j-1)) / viewportSize).rgb;
+      }
+    }
+
+    vec3 Lx = 2.0*(c[7]-c[1]) + c[6] + c[8] - c[2] - c[0];
+    vec3 Ly = 2.0*(c[3]-c[5]) + c[6] + c[0] - c[2] - c[8];
+    vec3 G = sqrt(Lx*Lx+Ly*Ly);
+
+    fragColor = vec4(G, 1.0);
+  }
+#+END_SRC
 
 #+BEGIN_SRC lisp :tangle example.lisp
   (cl:in-package :trivial-gamekit.postproc.example)
@@ -30,24 +55,17 @@ Also lets define a package we will evaluate our code in.
   (defparameter *foreground* (gamekit:vec4 0.8 0.8 0.8 1))
   (defvar +origin+ (gamekit:vec2 0 0))
 
-  (gamekit:defgame postproc-example (gamekit.postproc:postproc
-                                     gamekit.postproc.blur:blur-postproc)
+  (gamekit.postproc::define-postprocessing-pipeline
+      (example-pipeline
+       (:sources "example.glsl")
+       (:base-path :system-relative :trivial-gamekit-postproc/example)))
+
+  (gamekit:defgame postproc-example (gamekit.postproc:postproc)
     ()
     (:viewport-width 800)
     (:viewport-height 600)
     (:viewport-title "Post Processing Example")
-    (:default-initargs :postproc-pipelines '(gamekit.postproc.blur:blur-pipeline)
-                       :postproc-indirect-width 200
-                       :postproc-indirect-height 150
-                       :postproc-indirect-filter :linear))
-
-
-  (defmethod gamekit.postproc.blur:blur-passes ((this postproc-example))
-    10)
-
-
-  (defmethod gamekit.postproc.blur:blur-offset-coefficient ((this postproc-example))
-    (- 2 (* (abs (cos (* (bodge-util:real-time-seconds) 0.5))) 2)))
+    (:default-initargs :postproc-pipelines '(example-pipeline)))
 
 
   (defmethod gamekit:draw ((this postproc-example))

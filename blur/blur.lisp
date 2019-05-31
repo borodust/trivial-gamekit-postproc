@@ -8,25 +8,12 @@
 (cl:in-package :trivial-gamekit.postproc.blur)
 
 
-(ge.gx:defshader (blur-vertex
-                  (:sources "blur.v.glsl")
-                  (:base-path :system-relative :trivial-gamekit-postproc/blur))
-  (canvas-position :location 0))
-
-
-(ge.gx:defshader (blur-fragment
-                  (:sources "blur.f.glsl")
-                  (:base-path :system-relative :trivial-gamekit-postproc/blur))
-  (canvas-texture :name "image")
-  (canvas-width :name "width")
-  (canvas-height :name "height")
+(gamekit.postproc::define-postprocessing-pipeline
+    (blur-pipeline
+     (:sources "blur.f.glsl")
+     (:base-path :system-relative :trivial-gamekit-postproc/blur))
   (vertical :name "isVertical" :type :bool)
   (offset-coefficient :name "offsetCoef"))
-
-
-(ge.gx:defpipeline blur-pipeline
-  :vertex blur-vertex
-  :fragment blur-fragment)
 
 
 (defclass blur-postproc () ())
