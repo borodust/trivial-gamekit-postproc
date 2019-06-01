@@ -8,9 +8,9 @@
 (cl:in-package :trivial-gamekit.postproc.blur)
 
 
-(gamekit.postproc::define-postprocessing-pipeline
+(gamekit.postproc:define-postprocessing-pipeline
     (blur-pipeline
-     (:sources "blur.f.glsl")
+     (:sources "blur.glsl")
      (:base-path :system-relative :trivial-gamekit-postproc/blur))
   (vertical :name "isVertical" :type :bool)
   (offset-coefficient :name "offsetCoef"))

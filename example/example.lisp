@@ -8,7 +8,7 @@
 (defparameter *foreground* (gamekit:vec4 0.8 0.8 0.8 1))
 (defvar +origin+ (gamekit:vec2 0 0))
 
-(gamekit.postproc::define-postprocessing-pipeline
+(gamekit.postproc:define-postprocessing-pipeline
     (example-pipeline
      (:sources "example.glsl")
      (:base-path :system-relative :trivial-gamekit-postproc/example)))

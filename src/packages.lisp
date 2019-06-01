@@ -3,10 +3,6 @@
   (:use :cl :cl-bodge.engine)
   (:export #:postproc
 
+           #:define-postprocessing-pipeline
            #:handle-pipeline-rendering
-           #:render-pipeline
-
-           #:canvas-position
-           #:canvas-texture
-           #:canvas-width
-           #:canvas-height))
+           #:render-pipeline))
